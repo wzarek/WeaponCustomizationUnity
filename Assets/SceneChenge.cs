@@ -1,0 +1,215 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
+using UnityEngine;
+
+public class SceneChenge : MonoBehaviour
+{
+    private enum SceneState
+    {
+        [Description("INSPECT")]
+        Inspect,
+        [Description("MODIFY")]
+        Modify
+    }
+
+    private enum AnimationState
+    {
+        Changing,
+        Finished
+    }
+
+    // states
+    private SceneState _sceneState = SceneState.Inspect;
+    private AnimationState _animationState = AnimationState.Finished;
+
+    private float _animTime = 0;
+
+    // positions
+    private Vector3 _defaultPosition;
+    private Quaternion _defaultRotation;
+    private Vector3 _modifyPosition;
+    private Quaternion _modifyRotation;
+
+    // objects
+    private GameObject _weaponObject;
+    private GameObject _resetViewTextUIObject;
+
+    // rotation mouse
+    private float _sensitivity;
+    private Vector3 _mouseReference;
+    private Vector3 _mouseOffset;
+    private Vector3 _rotation;
+    private bool _isRotating;
+
+    void Start()
+    {
+        _weaponObject = GameObject.Find("rura");
+        _resetViewTextUIObject = GameObject.Find("ModifySceneInputHelpers");
+
+        _resetViewTextUIObject.SetActive(false);
+
+        _defaultPosition = _weaponObject.transform.position;
+        _defaultRotation = _weaponObject.transform.rotation;
+
+        _modifyPosition = _defaultPosition + new Vector3(-1.7f, 0.5f, 3);
+        _modifyRotation = Quaternion.Euler(_defaultRotation.eulerAngles + new Vector3(5, -20, -70));
+
+        _sensitivity = 0.4f;
+        _rotation = Vector3.zero;
+
+        ChangeWeaponTransformation();
+    }
+
+    void Update()
+    {
+        if (_isRotating)
+        {
+            CheckModifyInputs();
+            return;
+        }
+
+        CheckChangeStateInput();
+
+        if (_animationState == AnimationState.Changing)
+        {
+            ChangeWeaponTransformation();
+            return;
+        }
+
+        if (_sceneState == SceneState.Inspect)
+        {
+            CheckInspectInputs();
+        }
+        else
+        {
+            CheckModifyInputs();
+        }
+    }
+
+    void CheckMouseDown()
+    {
+        _isRotating = true;
+        _mouseReference = Input.mousePosition;
+    }
+
+    void CheckMouseUp()
+    {
+        _isRotating = false;
+    }
+
+    private void CheckChangeStateInput()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            _sceneState = _sceneState == SceneState.Modify ? SceneState.Inspect : SceneState.Modify;
+            _animTime = 0;
+
+            _resetViewTextUIObject.SetActive(_sceneState == SceneState.Modify);
+
+            ChangeWeaponTransformation();
+            
+            Debug.Log($"--- SCENE CHANGED TO {Helpers.GetDescription(_sceneState)} ---");
+        }
+    }
+
+    private void CheckInspectInputs()
+    {
+
+    }
+
+    private void CheckModifyInputs()
+    {
+        if (Input.GetButtonDown("Fire3"))
+        {
+            CheckMouseDown();
+        }
+
+        if (Input.GetButtonUp("Fire3"))
+        {
+            CheckMouseUp();
+        }
+
+        if (_isRotating)
+        {
+            _mouseOffset = (Input.mousePosition - _mouseReference);
+
+            _rotation.y = -(_mouseOffset.y) * _sensitivity;
+
+            _rotation.x = -(_mouseOffset.y - _mouseOffset.x) * _sensitivity/10;
+
+            _rotation.z = -(_mouseOffset.x) * _sensitivity;
+
+            _weaponObject.transform.Rotate(_rotation);
+
+            _mouseReference = Input.mousePosition;
+        }
+
+        if (!_isRotating)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                ChangeWeaponTransformation();
+            }
+        }
+    }
+
+    private void ChangeWeaponTransformation()
+    {
+        if (_sceneState == SceneState.Inspect)
+        {
+            _weaponObject.transform.position = Vector3.Lerp(_weaponObject.transform.position, _defaultPosition, _animTime);
+            _weaponObject.transform.rotation = Quaternion.Lerp(_weaponObject.transform.rotation, _defaultRotation, _animTime);
+        }
+        else if (_sceneState == SceneState.Modify)
+        {
+            _weaponObject.transform.position = Vector3.Lerp(_weaponObject.transform.position, _modifyPosition, _animTime);
+            _weaponObject.transform.rotation = Quaternion.Lerp(_weaponObject.transform.rotation, _modifyRotation, _animTime);
+        }
+
+        CheckAndChangeAnimationState();
+    }
+
+    private void CheckAndChangeAnimationState()
+    {
+        _animationState = AnimationState.Changing;
+
+        if (_animTime >= 1)
+        {
+            _animationState = AnimationState.Finished;
+            _animTime = 0;
+        }
+        else
+        {
+            _animTime += Time.deltaTime;
+        }
+    }
+}
+
+
+public static class Helpers
+{
+    public static string GetDescription<T>(this T enumerationValue)
+    where T : struct
+    {
+        Type type = enumerationValue.GetType();
+        if (!type.IsEnum)
+        {
+            throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
+        }
+
+        MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+        if (memberInfo != null && memberInfo.Length > 0)
+        {
+            object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (attrs != null && attrs.Length > 0)
+            {
+                return ((DescriptionAttribute)attrs[0]).Description;
+            }
+        }
+        return enumerationValue.ToString();
+    }
+}
