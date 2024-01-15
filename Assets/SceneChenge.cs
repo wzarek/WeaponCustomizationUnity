@@ -37,7 +37,7 @@ namespace Scripts
 
         void Start()
         {
-            _weaponObject = GameObject.Find("rura");
+            _weaponObject = GameObject.Find("HK416");
             _resetViewTextUIObject = GameObject.Find("ModifySceneInputHelpers");
             _customizeMenuUIObject = GameObject.Find("CustomizeView");
 
@@ -47,8 +47,8 @@ namespace Scripts
             _defaultPosition = _weaponObject.transform.position;
             _defaultRotation = _weaponObject.transform.rotation;
 
-            _modifyPosition = _defaultPosition + new Vector3(-1.7f, 0.5f, 3);
-            _modifyRotation = Quaternion.Euler(_defaultRotation.eulerAngles + new Vector3(5, -20, -70));
+            _modifyPosition = _defaultPosition + new Vector3(-1.2f, 0.5f, 4);
+            _modifyRotation = Quaternion.Euler(_defaultRotation.eulerAngles + new Vector3(0, -90, 0));
 
             _sensitivity = 0.4f;
             _rotation = Vector3.zero;
@@ -135,11 +135,11 @@ namespace Scripts
             {
                 _mouseOffset = (Input.mousePosition - _mouseReference);
 
-                _rotation.y = -(_mouseOffset.y) * _sensitivity;
+                _rotation.y = -(_mouseOffset.x) * _sensitivity;
 
-                _rotation.x = -(_mouseOffset.y - _mouseOffset.x) * _sensitivity / 10;
+                _rotation.x = -(_mouseOffset.y - _mouseOffset.x) * _sensitivity / 12;
 
-                _rotation.z = -(_mouseOffset.x) * _sensitivity;
+                _rotation.z = -(_mouseOffset.y) * _sensitivity;
 
                 _weaponObject.transform.Rotate(_rotation);
 
