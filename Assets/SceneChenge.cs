@@ -101,7 +101,7 @@ namespace Scripts
 
         private void CheckChangeStateInput()
         {
-            if (!_isCustomizeMenuActive && Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.C))
             {
                 _sceneState = _sceneState == SceneState.Modify ? SceneState.Inspect : SceneState.Modify;
                 _animTime = 0;
@@ -121,12 +121,12 @@ namespace Scripts
 
         private void CheckModifyInputs()
         {
-            if (!_isCustomizeMenuActive && Input.GetButtonDown("Fire3"))
+            if (Input.GetButtonDown("Fire3"))
             {
                 CheckMouseDown();
             }
 
-            if (!_isCustomizeMenuActive && Input.GetButtonUp("Fire3"))
+            if (Input.GetButtonUp("Fire3"))
             {
                 CheckMouseUp();
             }
@@ -148,7 +148,7 @@ namespace Scripts
 
             if (!_isRotating)
             {
-                if (!_isCustomizeMenuActive && Input.GetKeyDown(KeyCode.R))
+                if (Input.GetKeyDown(KeyCode.R))
                 {
                     ChangeWeaponTransformation();
                 }
