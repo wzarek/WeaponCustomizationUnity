@@ -43,7 +43,7 @@ namespace Scripts
             _defaultPosition = _weaponObject.transform.position;
             _defaultRotation = _weaponObject.transform.rotation;
 
-            _modifyPosition = _defaultPosition + new Vector3(-1.2f, 0.5f, 4);
+            _modifyPosition = _defaultPosition + new Vector3(-1.2f, 0.5f, 2);
             _modifyRotation = Quaternion.Euler(_defaultRotation.eulerAngles + new Vector3(0, -90, 0));
 
             _sensitivity = 0.4f;
