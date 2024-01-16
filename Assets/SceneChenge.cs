@@ -23,9 +23,9 @@ namespace Scripts
         private Quaternion _modifyRotation;
 
         // objects
-        private GameObject _weaponObject;
-        private GameObject _resetViewTextUIObject;
-        private GameObject _customizeMenuUIObject;
+        [SerializeField] public GameObject _weaponObject;
+        [SerializeField] public GameObject _resetViewTextUIObject;
+        [SerializeField] public GameObject _customizeMenuUIObject;
 
         // rotation mouse
         private float _sensitivity;
@@ -37,10 +37,6 @@ namespace Scripts
 
         void Start()
         {
-            _weaponObject = GameObject.Find("HK416");
-            _resetViewTextUIObject = GameObject.Find("ModifySceneInputHelpers");
-            _customizeMenuUIObject = GameObject.Find("CustomizeView");
-
             _resetViewTextUIObject.SetActive(false);
             _customizeMenuUIObject.SetActive(false);
 
@@ -108,6 +104,9 @@ namespace Scripts
 
                 _resetViewTextUIObject.SetActive(_sceneState == SceneState.Modify);
 
+                _customizeMenuUIObject.SetActive(false);
+                _isCustomizeMenuActive = false;
+
                 ChangeWeaponTransformation();
 
                 Debug.Log($"--- SCENE CHANGED TO {Helpers.GetDescription(_sceneState)} ---");
@@ -135,11 +134,11 @@ namespace Scripts
             {
                 _mouseOffset = (Input.mousePosition - _mouseReference);
 
-                _rotation.y = -(_mouseOffset.x) * _sensitivity;
+                _rotation.y = (_mouseOffset.x) * _sensitivity;
 
-                _rotation.x = -(_mouseOffset.y - _mouseOffset.x) * _sensitivity / 12;
+                _rotation.x = (_mouseOffset.y - _mouseOffset.x) * _sensitivity / 12;
 
-                _rotation.z = -(_mouseOffset.y) * _sensitivity;
+                _rotation.z = (_mouseOffset.y) * _sensitivity;
 
                 _weaponObject.transform.Rotate(_rotation);
 
