@@ -43,7 +43,7 @@ namespace Scripts
                     offset = new Vector3(-0.25f, -0.65f, 0);
                     break;
                 case Positioning.RightBottom:
-                    offset = new Vector3(1.5f, -2.35f, 0);
+                    offset = new Vector3(1.05f, -0.45f, 0);
                     break;
             }
         }

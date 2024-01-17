@@ -9,14 +9,6 @@ namespace Scripts
         Modify
     }
 
-    enum Sight
-    {
-        [Description("S0")]
-        Default,
-        [Description("S1")]
-        S1
-    }
-
     enum AnimationState
     {
         Changing,

@@ -8,34 +8,18 @@ using UnityEngine.UI;
 
 public class PreviewSystem : MonoBehaviour, IPointerClickHandler
 {
-    private Sight _currentSight = Sight.Default;
-    private const string SightMenuName = "SightMenu";
-    private const string SightPreviewsName = "SightPreviews";
-
-    private GameObject _sightMenu;
-    private GameObject _sightPreviews;
-    private GameObject _sightModsView;
+    [SerializeField] public GameObject Menu;
+    [SerializeField] public GameObject Previews;
+    [SerializeField] public GameObject SightsRootObject;
 
     private bool _isMenuVisible;
     private bool _isComponentVisible;
 
-    private GameObject _sightMenuS0;
-    private GameObject _sightMenuS1;
-
-
-    private string GetMenuNameForSight(Sight sight)
-    {
-        return $"Menu_{sight.GetDescription()}";
-    }
+    private List<GameObject> _menus = new List<GameObject>();
 
     private string GetMenuNameForSight(string sight)
     {
         return $"Menu_{sight}";
-    }
-
-    private string GetPreviewNameForSight(Sight sight)
-    {
-        return $"Preview_{sight.GetDescription()}";
     }
 
     private string GetPreviewNameForSight(string sight)
@@ -46,22 +30,25 @@ public class PreviewSystem : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         _isMenuVisible = !_isMenuVisible;
-        _sightMenu.SetActive(_isMenuVisible);
+        Menu.SetActive(_isMenuVisible);
     }
 
     void Start()
     {
-        _sightMenu = GameObject.Find(SightMenuName);
-        _sightPreviews = GameObject.Find(SightPreviewsName);
-        _sightMenuS0 = GameObject.Find(GetMenuNameForSight("S0"));
-        _sightMenuS1 = GameObject.Find(GetMenuNameForSight("S1"));
-        _sightModsView = GameObject.Find("SightMods");
-        _sightMenu.SetActive(_isMenuVisible);
+        Menu.SetActive(_isMenuVisible);
 
         EventTrigger.TriggerEvent trigev = new EventTrigger.TriggerEvent();
         trigev.AddListener((eventData) => OnMenuItemClick((PointerEventData)eventData));
-        _sightMenuS0.GetComponent<EventTrigger>().triggers.Add(new EventTrigger.Entry() { callback = trigev, eventID = EventTriggerType.PointerDown });
-        _sightMenuS1.GetComponent<EventTrigger>().triggers.Add(new EventTrigger.Entry() { callback = trigev, eventID = EventTriggerType.PointerDown });
+
+        foreach (Transform child in Menu.transform)
+        {
+            var childGameObject = child.gameObject;
+            if (childGameObject != null)
+            {
+                childGameObject.GetComponent<EventTrigger>().triggers.Add(new EventTrigger.Entry() { callback = trigev, eventID = EventTriggerType.PointerDown });
+                Debug.Log(childGameObject.name);
+            }
+        }
     }
 
     private void OnMenuItemClick(PointerEventData eventData)
@@ -98,7 +85,7 @@ public class PreviewSystem : MonoBehaviour, IPointerClickHandler
         var sightMenuName = GetMenuNameForSight(sightName);
         var sightPreviewName = GetPreviewNameForSight(sightName);
 
-        foreach(Transform child in _sightMenu.transform)
+        foreach(Transform child in Menu.transform)
         {
             if (child.name != sightMenuName)
             {
@@ -126,7 +113,7 @@ public class PreviewSystem : MonoBehaviour, IPointerClickHandler
             }
         }
 
-        foreach (Transform child in _sightPreviews.transform)
+        foreach (Transform child in Previews.transform)
         {
             if (child.name != sightPreviewName)
             {
@@ -138,7 +125,7 @@ public class PreviewSystem : MonoBehaviour, IPointerClickHandler
             }
         }
 
-        foreach (Transform child in _sightModsView.transform)
+        foreach (Transform child in SightsRootObject.transform)
         {
             if (child.name != sightName)
             {
