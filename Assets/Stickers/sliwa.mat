@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: sticker1
+  m_Name: sliwa
   m_Shader: {fileID: 4800000, guid: 1d64af84bdc970c4fae0c1e06dd95b73, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -43,7 +43,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap:
-        m_Texture: {fileID: 2800000, guid: 9dcca7e74a5aef549acda4e222f132dd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6222111453b2d814bbb261c1268ef2e9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BentNormalMap:
@@ -83,11 +83,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
-        m_Texture: {fileID: 2800000, guid: 9dcca7e74a5aef549acda4e222f132dd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6222111453b2d814bbb261c1268ef2e9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 9dcca7e74a5aef549acda4e222f132dd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6222111453b2d814bbb261c1268ef2e9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMapOS:
@@ -163,7 +163,7 @@ Material:
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
-    - _DecalBlend: 0.5
+    - _DecalBlend: 1
     - _DecalColorMask0: 15
     - _DecalColorMask1: 15
     - _DecalColorMask2: 11
@@ -215,7 +215,7 @@ Material:
     - _Metallic: 0
     - _MetallicRemapMax: 1
     - _MetallicRemapMin: 0
-    - _NormalBlendSrc: 0
+    - _NormalBlendSrc: 1
     - _NormalMapSpace: 0
     - _NormalScale: 1
     - _ObjectSpaceUVMapping: 0
@@ -289,7 +289,7 @@ Material:
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &86409125841887384
+--- !u!114 &940979193180563502
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
