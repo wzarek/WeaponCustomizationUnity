@@ -2,6 +2,7 @@ using Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,12 +11,9 @@ public class PreviewSystem : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] public GameObject Menu;
     [SerializeField] public GameObject Previews;
-    [SerializeField] public GameObject SightsRootObject;
+    [SerializeField] public GameObject WeaponRootObject;
 
     private bool _isMenuVisible;
-    private bool _isComponentVisible;
-
-    private List<GameObject> _menus = new List<GameObject>();
 
     private string GetMenuNameForSight(string sight)
     {
@@ -68,16 +66,10 @@ public class PreviewSystem : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        switch (menuName)
-        {
-            case "Menu_S0":
-                HandleSightChange("S0");
-                break;
+        var menuNameSplitted = menuName.Split('_');
+        var sightName = menuNameSplitted.Last();
 
-            case "Menu_S1":
-                HandleSightChange("S1");
-                break;
-        }
+        HandleSightChange(sightName);
     }
 
     private void HandleSightChange(string sightName)
@@ -125,7 +117,7 @@ public class PreviewSystem : MonoBehaviour, IPointerClickHandler
             }
         }
 
-        foreach (Transform child in SightsRootObject.transform)
+        foreach (Transform child in WeaponRootObject.transform)
         {
             if (child.name != sightName)
             {

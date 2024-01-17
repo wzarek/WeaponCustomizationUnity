@@ -23,9 +23,10 @@ namespace Scripts
         private Quaternion _modifyRotation;
 
         // objects
-        [SerializeField] public GameObject _weaponObject;
-        [SerializeField] public GameObject _resetViewTextUIObject;
-        [SerializeField] public GameObject _customizeMenuUIObject;
+        [SerializeField] public GameObject WeaponObject;
+        [SerializeField] public GameObject ResetViewTextUIObject;
+        [SerializeField] public GameObject CustomizeMenuUIObject;
+        [SerializeField] public GameObject StickerMenuUIObject;
 
         // rotation mouse
         private float _sensitivity;
@@ -34,16 +35,18 @@ namespace Scripts
         private Vector3 _rotation;
         private bool _isRotating;
         private bool _isCustomizeMenuActive;
+        private bool _isStickerMenuActive;
 
         void Start()
         {
-            _resetViewTextUIObject.SetActive(false);
-            _customizeMenuUIObject.SetActive(false);
+            ResetViewTextUIObject.SetActive(false);
+            CustomizeMenuUIObject.SetActive(false);
+            StickerMenuUIObject.SetActive(false);
 
-            _defaultPosition = _weaponObject.transform.position;
-            _defaultRotation = _weaponObject.transform.rotation;
+            _defaultPosition = WeaponObject.transform.position;
+            _defaultRotation = WeaponObject.transform.rotation;
 
-            _modifyPosition = _defaultPosition + new Vector3(-1.2f, 0.5f, 2);
+            _modifyPosition = _defaultPosition + new Vector3(-1.2f, 0.5f, 4);
             _modifyRotation = Quaternion.Euler(_defaultRotation.eulerAngles + new Vector3(0, -90, 0));
 
             _sensitivity = 0.4f;
@@ -102,9 +105,9 @@ namespace Scripts
                 _sceneState = _sceneState == SceneState.Modify ? SceneState.Inspect : SceneState.Modify;
                 _animTime = 0;
 
-                _resetViewTextUIObject.SetActive(_sceneState == SceneState.Modify);
+                ResetViewTextUIObject.SetActive(_sceneState == SceneState.Modify);
 
-                _customizeMenuUIObject.SetActive(false);
+                CustomizeMenuUIObject.SetActive(false);
                 _isCustomizeMenuActive = false;
 
                 ChangeWeaponTransformation();
@@ -140,7 +143,7 @@ namespace Scripts
 
                 _rotation.z = (_mouseOffset.y) * _sensitivity;
 
-                _weaponObject.transform.Rotate(_rotation);
+                WeaponObject.transform.Rotate(_rotation);
 
                 _mouseReference = Input.mousePosition;
             }
@@ -155,6 +158,21 @@ namespace Scripts
                 if (Input.GetKeyDown(KeyCode.M))
                 {
                     ToggleCustomizeMenu();
+
+                    if (_isStickerMenuActive)
+                    {
+                        ToggleStickerMenu();
+                    }
+                }
+
+                if (Input.GetKeyDown(KeyCode.T))
+                {
+                    ToggleStickerMenu();
+
+                    if (_isCustomizeMenuActive)
+                    {
+                        ToggleCustomizeMenu();
+                    }
                 }
             }
         }
@@ -164,13 +182,28 @@ namespace Scripts
             if (!_isCustomizeMenuActive)
             {
                 ChangeWeaponTransformation();
-                _customizeMenuUIObject.SetActive(true);
+                CustomizeMenuUIObject.SetActive(true);
                 _isCustomizeMenuActive = true;
             }
             else
             {
-                _customizeMenuUIObject.SetActive(false);
+                CustomizeMenuUIObject.SetActive(false);
                 _isCustomizeMenuActive = false;
+            }
+        }
+
+        private void ToggleStickerMenu()
+        {
+            if (!_isStickerMenuActive)
+            {
+                ChangeWeaponTransformation();
+                StickerMenuUIObject.SetActive(true);
+                _isStickerMenuActive = true;
+            }
+            else
+            {
+                StickerMenuUIObject.SetActive(false);
+                _isStickerMenuActive = false;
             }
         }
 
@@ -178,13 +211,13 @@ namespace Scripts
         {
             if (_sceneState == SceneState.Inspect)
             {
-                _weaponObject.transform.position = Vector3.Lerp(_weaponObject.transform.position, _defaultPosition, _animTime);
-                _weaponObject.transform.rotation = Quaternion.Lerp(_weaponObject.transform.rotation, _defaultRotation, _animTime);
+                WeaponObject.transform.position = Vector3.Lerp(WeaponObject.transform.position, _defaultPosition, _animTime);
+                WeaponObject.transform.rotation = Quaternion.Lerp(WeaponObject.transform.rotation, _defaultRotation, _animTime);
             }
             else if (_sceneState == SceneState.Modify)
             {
-                _weaponObject.transform.position = Vector3.Lerp(_weaponObject.transform.position, _modifyPosition, _animTime);
-                _weaponObject.transform.rotation = Quaternion.Lerp(_weaponObject.transform.rotation, _modifyRotation, _animTime);
+                WeaponObject.transform.position = Vector3.Lerp(WeaponObject.transform.position, _modifyPosition, _animTime);
+                WeaponObject.transform.rotation = Quaternion.Lerp(WeaponObject.transform.rotation, _modifyRotation, _animTime);
             }
 
             CheckAndChangeAnimationState();
